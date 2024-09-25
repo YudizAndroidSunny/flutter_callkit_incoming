@@ -22,7 +22,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.hiennv.flutter_callkit_incoming.widgets.RippleRelativeLayout
 import com.squareup.picasso.Picasso
-import de.hdodenhof.circleimageview.CircleImageView
+//import de.hdodenhof.circleimageview.CircleImageView
 import kotlin.math.abs
 import okhttp3.OkHttpClient
 import com.squareup.picasso.OkHttp3Downloader
@@ -30,6 +30,7 @@ import android.view.ViewGroup.MarginLayoutParams
 import android.os.PowerManager
 import android.text.TextUtils
 import android.util.Log
+import android.widget.Button
 
 
 class CallkitIncomingActivity : Activity() {
@@ -67,20 +68,22 @@ class CallkitIncomingActivity : Activity() {
 
     private var endedCallkitIncomingBroadcastReceiver = EndedCallkitIncomingBroadcastReceiver()
 
-    private lateinit var ivBackground: ImageView
-    private lateinit var llBackgroundAnimation: RippleRelativeLayout
+//    private lateinit var ivBackground: ImageView
+//    private lateinit var llBackgroundAnimation: RippleRelativeLayout
 
     private lateinit var tvNameCaller: TextView
-    private lateinit var tvNumber: TextView
-    private lateinit var ivLogo: ImageView
-    private lateinit var ivAvatar: CircleImageView
+//    private lateinit var tvNumber: TextView
+//    private lateinit var ivLogo: ImageView
+//    private lateinit var ivAvatar: CircleImageView
 
-    private lateinit var llAction: LinearLayout
-    private lateinit var ivAcceptCall: ImageView
-    private lateinit var tvAccept: TextView
+//    private lateinit var llAction: LinearLayout
+//    private lateinit var ivAcceptCall: ImageView
+    private lateinit var ivAcceptCall: Button
+//    private lateinit var tvAccept: TextView
 
-    private lateinit var ivDeclineCall: ImageView
-    private lateinit var tvDecline: TextView
+//    private lateinit var ivDeclineCall: ImageView
+    private lateinit var ivDeclineCall: Button
+//    private lateinit var tvDecline: TextView
 
     @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -162,7 +165,12 @@ class CallkitIncomingActivity : Activity() {
 
     private fun incomingData(intent: Intent) {
         val data = intent.extras?.getBundle(CallkitConstants.EXTRA_CALLKIT_INCOMING_DATA)
-        if (data == null) finish()
+
+        if (data != null) {
+            for (key in data.keySet()) {
+                Log.d("IncomingData", "$key: ${data.get(key)}")
+            }
+        }
 
         val isShowFullLockedScreen = data?.getBoolean(CallkitConstants.EXTRA_CALLKIT_IS_SHOW_FULL_LOCKED_SCREEN, true)
         if(isShowFullLockedScreen == true) {
@@ -176,66 +184,73 @@ class CallkitIncomingActivity : Activity() {
 		val textColor = data?.getString(CallkitConstants.EXTRA_CALLKIT_TEXT_COLOR, "#ffffff")
         val isShowCallID = data?.getBoolean(CallkitConstants.EXTRA_CALLKIT_IS_SHOW_CALL_ID, false)
         tvNameCaller.text = data?.getString(CallkitConstants.EXTRA_CALLKIT_NAME_CALLER, "")
-        tvNumber.text = data?.getString(CallkitConstants.EXTRA_CALLKIT_HANDLE, "")
-        tvNumber.visibility = if (isShowCallID == true) View.VISIBLE else View.INVISIBLE
+
+        val actionableNotificationData = data?.getSerializable(CallkitConstants.EXTRA_CALLKIT_ACTIONABLE_NOTIFICATION_DATA) as? HashMap<String, Any?>?
+        if(actionableNotificationData != null) {
+            tvNameCaller.text = actionableNotificationData.get("visitor_name").toString()
+        } else {
+            Log.d("IncomingData", "actionableNotificationData  is NULL")
+        }
+//        tvNumber.text = data?.getString(CallkitConstants.EXTRA_CALLKIT_HANDLE, "")
+//        tvNumber.visibility = if (isShowCallID == true) View.VISIBLE else View.INVISIBLE
 
 		try {
 			tvNameCaller.setTextColor(Color.parseColor(textColor))
-			tvNumber.setTextColor(Color.parseColor(textColor))
+//			tvNumber.setTextColor(Color.parseColor(textColor))
 		} catch (error: Exception) {
 		}
 
-        val isShowLogo = data?.getBoolean(CallkitConstants.EXTRA_CALLKIT_IS_SHOW_LOGO, false)
-        ivLogo.visibility = if (isShowLogo == true) View.VISIBLE else View.INVISIBLE
+//        val isShowLogo = data?.getBoolean(CallkitConstants.EXTRA_CALLKIT_IS_SHOW_LOGO, false)
+//        ivLogo.visibility = if (isShowLogo == true) View.VISIBLE else View.INVISIBLE
 
         val avatarUrl = data?.getString(CallkitConstants.EXTRA_CALLKIT_AVATAR, "")
-        if (avatarUrl != null && avatarUrl.isNotEmpty()) {
-            ivAvatar.visibility = View.VISIBLE
-            val headers = data.getSerializable(CallkitConstants.EXTRA_CALLKIT_HEADERS) as HashMap<String, Any?>
-            getPicassoInstance(this@CallkitIncomingActivity, headers)
-                    .load(avatarUrl)
-                    .placeholder(R.drawable.ic_default_avatar)
-                    .error(R.drawable.ic_default_avatar)
-                    .into(ivAvatar)
-        }
+//        if (avatarUrl != null && avatarUrl.isNotEmpty()) {
+//            ivAvatar.visibility = View.VISIBLE
+//            val headers = data.getSerializable(CallkitConstants.EXTRA_CALLKIT_HEADERS) as HashMap<String, Any?>
+//            getPicassoInstance(this@CallkitIncomingActivity, headers)
+//                    .load(avatarUrl)
+//                    .placeholder(R.drawable.ic_default_avatar)
+//                    .error(R.drawable.ic_default_avatar)
+//                    .into(ivAvatar)
+//        }
 
-        val callType = data?.getInt(CallkitConstants.EXTRA_CALLKIT_TYPE, 0) ?: 0
-        if (callType > 0) {
-            ivAcceptCall.setImageResource(R.drawable.ic_video)
-        }
+//        val callType = data?.getInt(CallkitConstants.EXTRA_CALLKIT_TYPE, 0) ?: 0
+//        if (callType > 0) {
+//            ivAcceptCall.setImageResource(R.drawable.ic_video)
+//        }
         val duration = data?.getLong(CallkitConstants.EXTRA_CALLKIT_DURATION, 0L) ?: 0L
         wakeLockRequest(duration)
 
         finishTimeout(data, duration)
 
         val textAccept = data?.getString(CallkitConstants.EXTRA_CALLKIT_TEXT_ACCEPT, "")
-        tvAccept.text = if (TextUtils.isEmpty(textAccept)) getString(R.string.text_accept) else textAccept
+//        tvAccept.text = if (TextUtils.isEmpty(textAccept)) getString(R.string.text_accept) else textAccept
         val textDecline = data?.getString(CallkitConstants.EXTRA_CALLKIT_TEXT_DECLINE, "")
-        tvDecline.text = if (TextUtils.isEmpty(textDecline)) getString(R.string.text_decline) else textDecline
+//        tvDecline.text = if (TextUtils.isEmpty(textDecline)) getString(R.string.text_decline) else textDecline
 
-		try {
-			tvAccept.setTextColor(Color.parseColor(textColor))
-			tvDecline.setTextColor(Color.parseColor(textColor))
-		} catch (error: Exception) {
-		}
+//		try {
+//			tvAccept.setTextColor(Color.parseColor(textColor))
+//			tvDecline.setTextColor(Color.par/**/seColor(textColor))
+//		} catch (error: Exception) {
+//		}
 
-        val backgroundColor = data?.getString(CallkitConstants.EXTRA_CALLKIT_BACKGROUND_COLOR, "#0955fa")
-        try {
-            ivBackground.setBackgroundColor(Color.parseColor(backgroundColor))
-        } catch (error: Exception) {
-        }
-        var backgroundUrl = data?.getString(CallkitConstants.EXTRA_CALLKIT_BACKGROUND_URL, "")
-        if (backgroundUrl != null && backgroundUrl.isNotEmpty()) {
-            if (!backgroundUrl.startsWith("http://", true) && !backgroundUrl.startsWith("https://", true)){
-                backgroundUrl = String.format("file:///android_asset/flutter_assets/%s", backgroundUrl)
-            }
-            val headers = data?.getSerializable(CallkitConstants.EXTRA_CALLKIT_HEADERS) as HashMap<String, Any?>
-            getPicassoInstance(this@CallkitIncomingActivity, headers)
-                    .load(backgroundUrl)
-                    .placeholder(R.drawable.transparent)
-                    .error(R.drawable.transparent)
-                    .into(ivBackground)
-        }
+//        val backgroundColor = data?.getString(CallkitConstants.EXTRA_CALLKIT_BACKGROUND_COLOR, "#0955fa")
+//        try {
+//            ivBackground.setBackgroundColor(Color.parseColor(backgroundColor))
+//        } catch (error: Exception) {
+//        }
+//        var backgroundUrl = data?.getString(CallkitConstants.EXTRA_CALLKIT_BACKGROUND_URL, "")
+//        if (backgroundUrl != null && backgroundUrl.isNotEmpty()) {
+//            if (!backgroundUrl.startsWith("http://", true) && !backgroundUrl.startsWith("https://", true)){
+//                backgroundUrl = String.format("file:///android_asset/flutter_assets/%s", backgroundUrl)
+//            }
+//            val headers = data?.getSerializable(CallkitConstants.EXTRA_CALLKIT_HEADERS) as HashMap<String, Any?>
+//            getPicassoInstance(this@CallkitIncomingActivity, headers)
+//                    .load(backgroundUrl)
+//                    .placeholder(R.drawable.transparent)
+//                    .error(R.drawable.transparent)
+//                    .into(ivBackground)
+//        }
     }
 
     private fun finishTimeout(data: Bundle?, duration: Long) {
@@ -253,28 +268,28 @@ class CallkitIncomingActivity : Activity() {
     }
 
     private fun initView() {
-        ivBackground = findViewById(R.id.ivBackground)
-        llBackgroundAnimation = findViewById(R.id.llBackgroundAnimation)
-        llBackgroundAnimation.layoutParams.height =
-                Utils.getScreenWidth() + Utils.getStatusBarHeight(this@CallkitIncomingActivity)
-        llBackgroundAnimation.startRippleAnimation()
+//        ivBackground = findViewById(R.id.ivBackground)
+//        llBackgroundAnimation = findViewById(R.id.llBackgroundAnimation)
+//        llBackgroundAnimation.layoutParams.height =
+//                Utils.getScreenWidth() + Utils.getStatusBarHeight(this@CallkitIncomingActivity)
+//        llBackgroundAnimation.startRippleAnimation()
 
         tvNameCaller = findViewById(R.id.tvNameCaller)
-        tvNumber = findViewById(R.id.tvNumber)
-        ivLogo = findViewById(R.id.ivLogo)
-        ivAvatar = findViewById(R.id.ivAvatar)
+//        tvNumber = findViewById(R.id.tvNumber)
+//        ivLogo = findViewById(R.id.ivLogo)
+//        ivAvatar = findViewById(R.id.ivAvatar)
 
-        llAction = findViewById(R.id.llAction)
+//        llAction = findViewById(R.id.llAction)
 
-        val params = llAction.layoutParams as MarginLayoutParams
-        params.setMargins(0, 0, 0, Utils.getNavigationBarHeight(this@CallkitIncomingActivity))
-        llAction.layoutParams = params
+//        val params = llAction.layoutParams as MarginLayoutParams
+//        params.setMargins(0, 0, 0, Utils.getNavigationBarHeight(this@CallkitIncomingActivity))
+//        llAction.layoutParams = params
 
         ivAcceptCall = findViewById(R.id.ivAcceptCall)
-        tvAccept = findViewById(R.id.tvAccept)
+//        tvAccept = findViewById(R.id.tvAccept)
         ivDeclineCall = findViewById(R.id.ivDeclineCall)
-        tvDecline = findViewById(R.id.tvDecline)
-        animateAcceptCall()
+//        tvDecline = findViewById(R.id.tvDecline)
+//        animateAcceptCall()
 
         ivAcceptCall.setOnClickListener {
             onAcceptClick()

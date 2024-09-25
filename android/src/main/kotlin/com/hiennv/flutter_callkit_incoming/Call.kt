@@ -35,6 +35,9 @@ data class Data(val args: Map<String, Any?>) {
     @JsonProperty("headers")
     var headers: HashMap<String, Any?> =
         (args["headers"] ?: HashMap<String, Any?>()) as HashMap<String, Any?>
+    @JsonProperty("actionableNotificationData")
+    var actionableNotificationData: HashMap<String, Any?> =
+        (args["actionableNotificationData"] ?: HashMap<String, Any?>()) as HashMap<String, Any?>
     @JsonProperty("from")
     var from: String = ""
 
@@ -180,6 +183,7 @@ data class Data(val args: Map<String, Any?>) {
 
         bundle.putSerializable(CallkitConstants.EXTRA_CALLKIT_EXTRA, extra)
         bundle.putSerializable(CallkitConstants.EXTRA_CALLKIT_HEADERS, headers)
+        bundle.putSerializable(CallkitConstants.EXTRA_CALLKIT_ACTIONABLE_NOTIFICATION_DATA, actionableNotificationData)
 
         bundle.putBoolean(
             CallkitConstants.EXTRA_CALLKIT_IS_CUSTOM_NOTIFICATION,
@@ -274,6 +278,8 @@ data class Data(val args: Map<String, Any?>) {
                 bundle.getSerializable(CallkitConstants.EXTRA_CALLKIT_EXTRA) as HashMap<String, Any?>
             data.headers =
                 bundle.getSerializable(CallkitConstants.EXTRA_CALLKIT_HEADERS) as HashMap<String, Any?>
+            data.actionableNotificationData =
+                bundle.getSerializable(CallkitConstants.EXTRA_CALLKIT_ACTIONABLE_NOTIFICATION_DATA) as HashMap<String, Any?>
 
             data.isCustomNotification = bundle.getBoolean(
                 CallkitConstants.EXTRA_CALLKIT_IS_CUSTOM_NOTIFICATION,

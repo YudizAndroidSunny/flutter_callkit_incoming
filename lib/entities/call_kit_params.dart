@@ -1,3 +1,4 @@
+import 'package:flutter_callkit_incoming/entities/actionable_notification_data.dart';
 import 'package:flutter_callkit_incoming/entities/notification_params.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -25,6 +26,8 @@ class CallKitParams {
     this.headers,
     this.android,
     this.ios,
+    this.onDecline,
+    this.actionableNotificationData,
   });
 
   final String? id;
@@ -42,6 +45,10 @@ class CallKitParams {
   final Map<String, dynamic>? headers;
   final AndroidParams? android;
   final IOSParams? ios;
+  final ActionableNotificationData? actionableNotificationData;
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  final Function(String reason)? onDecline;
 
   factory CallKitParams.fromJson(Map<String, dynamic> json) =>
       _$CallKitParamsFromJson(json);

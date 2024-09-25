@@ -201,6 +201,9 @@ class CallkitIncomingBroadcastReceiver : BroadcastReceiver() {
                 "callbackText" to data.getString(CallkitConstants.EXTRA_CALLKIT_MISSED_CALL_CALLBACK_TEXT),
                 "isShowCallback" to data.getBoolean(CallkitConstants.EXTRA_CALLKIT_MISSED_CALL_CALLBACK_SHOW),
         )
+            val actionableNotificationData = mapOf(
+                "visitor_name" to data.getString("visitor_name"),
+        )
         val forwardData = mapOf(
                 "id" to data.getString(CallkitConstants.EXTRA_CALLKIT_ID, ""),
                 "nameCaller" to data.getString(CallkitConstants.EXTRA_CALLKIT_NAME_CALLER, ""),
@@ -212,6 +215,7 @@ class CallkitIncomingBroadcastReceiver : BroadcastReceiver() {
                 "textDecline" to data.getString(CallkitConstants.EXTRA_CALLKIT_TEXT_DECLINE, ""),
                 "extra" to data.getSerializable(CallkitConstants.EXTRA_CALLKIT_EXTRA)!!,
                 "missedCallNotification" to notification,
+                "actionableNotificationData" to actionableNotificationData,
                 "android" to android
         )
         FlutterCallkitIncomingPlugin.sendEvent(event, forwardData)

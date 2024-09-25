@@ -1,22 +1,37 @@
 import 'dart:async';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_callkit_incoming/entities/actionable_notification_data.dart';
 import 'package:flutter_callkit_incoming/entities/entities.dart';
 import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
 import 'package:flutter_callkit_incoming_example/app_router.dart';
+import 'package:flutter_callkit_incoming_example/firebase_options.dart';
 import 'package:flutter_callkit_incoming_example/navigation_service.dart';
 import 'package:uuid/uuid.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("Handling a background message: ${message.messageId}");
-  await Firebase.initializeApp(); //make sure firebase is initialized before using it (showCallkitIncoming)
+  print("Handling a background message data: ${message.data}");
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform); //make sure firebase is initialized before using it (showCallkitIncoming)
   showCallkitIncoming(const Uuid().v4());
 }
 
 Future<void> showCallkitIncoming(String uuid) async {
   final params = CallKitParams(
+    actionableNotificationData: ActionableNotificationData(
+      visitorId: '1a2b3c4d',
+      visitorName: 'Varshil Soni',
+      currentUserId: '2asd25asd1',
+      currentUserName:"Sunny Kadivar",
+      from: 'Yudiz Soluctions Pvt. Ltd.',
+      purpose: 'Discuss regarding develop new mobile application.',
+      comments: 'Next time this man will come make sure not will come with cigarette.',
+      message: 'Hello, I am Varshil Soni. I am here to discuss regarding develop new mobile application.',
+    ),
+    onDecline: (String reason) {
+      print('::: TEST ::: CALL_DECLINED_CUSTOM: $reason');
+    },
     id: uuid,
     nameCaller: 'Hien Nguyen',
     appName: 'Callkit',
@@ -129,7 +144,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 
   Future<void> initFirebase() async {
-    await Firebase.initializeApp();
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
     _firebaseMessaging = FirebaseMessaging.instance;
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {

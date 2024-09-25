@@ -223,50 +223,64 @@ class HomePageState extends State<HomePage> {
         print('HOME: $event');
         switch (event!.event) {
           case Event.actionCallIncoming:
+            print('::: TEST ::: CALL ACTION LISTENER ::: Event.actionCallIncoming');
             // TODO: received an incoming call
             break;
           case Event.actionCallStart:
+            print('::: TEST ::: CALL ACTION LISTENER ::: Event.actionCallStart');
             // TODO: started an outgoing call
             // TODO: show screen calling in Flutter
             break;
           case Event.actionCallAccept:
+            print('::: TEST ::: CALL ACTION LISTENER ::: Event.actionCallAccept');
             // TODO: accepted an incoming call
             // TODO: show screen calling in Flutter
             NavigationService.instance
                 .pushNamedIfNotCurrent(AppRoute.callingPage, args: event.body);
             break;
           case Event.actionCallDecline:
+            print('::: TEST ::: CALL ACTION LISTENER ::: Event.actionCallDecline');
             // TODO: declined an incoming call
             await requestHttp("ACTION_CALL_DECLINE_FROM_DART");
             break;
           case Event.actionCallEnded:
+            print('::: TEST ::: CALL ACTION LISTENER ::: Event.actionCallEnded');
             // TODO: ended an incoming/outgoing call
             break;
           case Event.actionCallTimeout:
+            print('::: TEST ::: CALL ACTION LISTENER ::: Event.actionCallTimeout');
             // TODO: missed an incoming call
             break;
           case Event.actionCallCallback:
+            print('::: TEST ::: CALL ACTION LISTENER ::: Event.actionCallCallback');
             // TODO: only Android - click action `Call back` from missed call notification
             break;
           case Event.actionCallToggleHold:
+            print('::: TEST ::: CALL ACTION LISTENER ::: Event.actionCallToggleHold');
             // TODO: only iOS
             break;
           case Event.actionCallToggleMute:
+            print('::: TEST ::: CALL ACTION LISTENER ::: Event.actionCallToggleMute');
             // TODO: only iOS
             break;
           case Event.actionCallToggleDmtf:
+            print('::: TEST ::: CALL ACTION LISTENER ::: Event.actionCallToggleDmtf');
             // TODO: only iOS
             break;
           case Event.actionCallToggleGroup:
+            print('::: TEST ::: CALL ACTION LISTENER ::: Event.actionCallToggleGroup');
             // TODO: only iOS
             break;
           case Event.actionCallToggleAudioSession:
+            print('::: TEST ::: CALL ACTION LISTENER ::: Event.actionCallToggleAudioSession');
             // TODO: only iOS
             break;
           case Event.actionDidUpdateDevicePushTokenVoip:
+            print('::: TEST ::: CALL ACTION LISTENER ::: Event.actionDidUpdateDevicePushTokenVoip');
             // TODO: only iOS
             break;
           case Event.actionCallCustom:
+            print('::: TEST ::: CALL ACTION LISTENER ::: Event.actionCallCustom');
             break;
         }
         callback(event);
@@ -278,6 +292,7 @@ class HomePageState extends State<HomePage> {
 
   //check with https://webhook.site/#!/2748bc41-8599-4093-b8ad-93fd328f1cd2
   Future<void> requestHttp(content) async {
+    print('::: TEST ::: CALL ACTION LISTENER ::: Request HTTP ::: $content');
     get(Uri.parse(
         'https://webhook.site/2748bc41-8599-4093-b8ad-93fd328f1cd2?data=$content'));
   }

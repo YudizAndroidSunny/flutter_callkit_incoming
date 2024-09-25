@@ -44,6 +44,17 @@ class FlutterCallkitIncomingPlugin : FlutterPlugin, MethodCallHandler, ActivityA
             eventHandlers.reapCollection().forEach {
                 it.get()?.send(event, body)
             }
+
+            if (event == CallkitConstants.ACTION_CALL_DECLINE) {
+                for ((name, channel) in methodChannels) {
+                    try {
+                        channel.invokeMethod("CALL_DECLINED_CUSTOM", "")
+                    } catch (e: Exception) {
+                        Log.d(EXTRA_CALLKIT_CALL_DATA, e.toString())
+                    }
+                }
+            }
+
         }
 
         public fun sendEventCustom(event: String, body: Map<String, Any>) {
@@ -148,7 +159,10 @@ class FlutterCallkitIncomingPlugin : FlutterPlugin, MethodCallHandler, ActivityA
             when (call.method) {
                 "showCallkitIncoming" -> {
                     val data = Data(call.arguments() ?: HashMap())
+                    Log.d("SUNNY", "showCallkitIncoming :: ${data}")
                     data.from = "notification"
+
+
                     //send BroadcastReceiver
                     context?.sendBroadcast(
                             CallkitIncomingBroadcastReceiver.getIntentIncoming(
@@ -156,7 +170,6 @@ class FlutterCallkitIncomingPlugin : FlutterPlugin, MethodCallHandler, ActivityA
                                     data.toBundle()
                             )
                     )
-
                     result.success("OK")
                 }
 

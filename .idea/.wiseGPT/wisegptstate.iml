@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WiseGptState">
+    <option name="modifiedFileList">
+      <list>
+        <option value="$PROJECT_DIR$/lib/entities/actionable_notification_data.dart" />
+        <option value="$PROJECT_DIR$/lib/entities/call_kit_params.dart" />
+        <option value="$PROJECT_DIR$/lib/entities/call_kit_params.g.dart" />
+        <option value="$PROJECT_DIR$/example/lib/main.dart" />
+      </list>
+    </option>
+  </component>
+</project>
