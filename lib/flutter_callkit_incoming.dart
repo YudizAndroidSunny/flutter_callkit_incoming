@@ -45,6 +45,12 @@ class FlutterCallkitIncoming {
       if (call.method == 'CALL_DECLINED_CUSTOM') {
         params.onDecline?.call(call.arguments);
       }
+      if (call.method == 'CALL_IGNORE') {
+        params.onIgnore?.call(call.arguments);
+      }
+      if (call.method == 'CALL_ACCEPT_CLOCK_OUT') {
+        params.onAcceptClockOut?.call(call.arguments);
+      }
     });
   }
 

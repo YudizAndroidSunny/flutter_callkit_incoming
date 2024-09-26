@@ -8,6 +8,13 @@ object CallkitConstants {
             "com.hiennv.flutter_callkit_incoming.ACTION_CALL_ACCEPT"
     const val ACTION_CALL_DECLINE =
             "com.hiennv.flutter_callkit_incoming.ACTION_CALL_DECLINE"
+
+    const val ACTION_CALL_IGNORE =
+        "com.hiennv.flutter_callkit_incoming.ACTION_CALL_IGNORE"
+
+    const val ACTION_CALL_ACCEPT_CLOCK_OUT =
+        "com.hiennv.flutter_callkit_incoming.ACTION_CALL_ACCEPT_CLOCK_OUT"
+
     const val ACTION_CALL_ENDED =
             "com.hiennv.flutter_callkit_incoming.ACTION_CALL_ENDED"
     const val ACTION_CALL_TOGGLE_MUTE =

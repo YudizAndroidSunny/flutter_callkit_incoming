@@ -48,7 +48,27 @@ class FlutterCallkitIncomingPlugin : FlutterPlugin, MethodCallHandler, ActivityA
             if (event == CallkitConstants.ACTION_CALL_DECLINE) {
                 for ((name, channel) in methodChannels) {
                     try {
-                        channel.invokeMethod("CALL_DECLINED_CUSTOM", "")
+                        channel.invokeMethod("CALL_DECLINED_CUSTOM", body.toString())
+                    } catch (e: Exception) {
+                        Log.d(EXTRA_CALLKIT_CALL_DATA, e.toString())
+                    }
+                }
+            }
+
+            if (event == CallkitConstants.ACTION_CALL_IGNORE) {
+                for ((name, channel) in methodChannels) {
+                    try {
+                        channel.invokeMethod("CALL_IGNORE", body.toString())
+                    } catch (e: Exception) {
+                        Log.d(EXTRA_CALLKIT_CALL_DATA, e.toString())
+                    }
+                }
+            }
+
+            if (event == CallkitConstants.ACTION_CALL_ACCEPT_CLOCK_OUT) {
+                for ((name, channel) in methodChannels) {
+                    try {
+                        channel.invokeMethod("CALL_ACCEPT_CLOCK_OUT", body.toString())
                     } catch (e: Exception) {
                         Log.d(EXTRA_CALLKIT_CALL_DATA, e.toString())
                     }

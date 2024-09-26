@@ -44,6 +44,12 @@ class CallkitIncomingBroadcastReceiver : BroadcastReceiver() {
                 putExtra(CallkitConstants.EXTRA_CALLKIT_INCOMING_DATA, data)
             }
 
+        fun getIntentIgnore(context: Context, data: Bundle?) =
+            Intent(context, CallkitIncomingBroadcastReceiver::class.java).apply {
+                action = "${context.packageName}.${CallkitConstants.ACTION_CALL_IGNORE}"
+                putExtra(CallkitConstants.EXTRA_CALLKIT_INCOMING_DATA, data)
+            }
+
         fun getIntentEnded(context: Context, data: Bundle?) =
             Intent(context, CallkitIncomingBroadcastReceiver::class.java).apply {
                 action = "${context.packageName}.${CallkitConstants.ACTION_CALL_ENDED}"
@@ -118,9 +124,31 @@ class CallkitIncomingBroadcastReceiver : BroadcastReceiver() {
                 }
             }
 
+            "${context.packageName}.${CallkitConstants.ACTION_CALL_ACCEPT_CLOCK_OUT}" -> {
+                try {
+                    sendEventFlutter(CallkitConstants.ACTION_CALL_ACCEPT_CLOCK_OUT, data)
+                    context.stopService(Intent(context, CallkitSoundPlayerService::class.java))
+                    callkitNotificationManager.clearIncomingNotification(data, true)
+                    addCall(context, Data.fromBundle(data), true)
+                } catch (error: Exception) {
+                    Log.e(TAG, null, error)
+                }
+            }
+
             "${context.packageName}.${CallkitConstants.ACTION_CALL_DECLINE}" -> {
                 try {
                     sendEventFlutter(CallkitConstants.ACTION_CALL_DECLINE, data)
+                    context.stopService(Intent(context, CallkitSoundPlayerService::class.java))
+                    callkitNotificationManager.clearIncomingNotification(data, false)
+                    removeCall(context, Data.fromBundle(data))
+                } catch (error: Exception) {
+                    Log.e(TAG, null, error)
+                }
+            }
+
+            "${context.packageName}.${CallkitConstants.ACTION_CALL_IGNORE}" -> {
+                try {
+                    sendEventFlutter(CallkitConstants.ACTION_CALL_IGNORE, data)
                     context.stopService(Intent(context, CallkitSoundPlayerService::class.java))
                     callkitNotificationManager.clearIncomingNotification(data, false)
                     removeCall(context, Data.fromBundle(data))

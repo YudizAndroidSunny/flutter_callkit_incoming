@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 class ActionableNotificationData {
+  String? logo;
   String? visitorId;
   String? currentUserId;
   String? visitorName;
+  String? visitorImage;
   String? currentUserName;
   String? from;
   String? purpose;
@@ -11,9 +13,11 @@ class ActionableNotificationData {
   String? message;
 
   ActionableNotificationData({
+    this.logo,
     this.visitorId,
     this.currentUserId,
     this.visitorName,
+    this.visitorImage,
     this.currentUserName,
     this.from,
     this.purpose,
@@ -34,6 +38,8 @@ class ActionableNotificationData {
     purpose: json["purpose"],
     comments: json["comments"],
     message: json["message"],
+    logo: json["logo"],
+    visitorImage: json["visitor_image"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -45,5 +51,7 @@ class ActionableNotificationData {
     "purpose": purpose,
     "comments": comments,
     "message": message,
+    "logo": logo,
+    "visitor_image": visitorImage,
   };
 }

@@ -28,6 +28,8 @@ class CallKitParams {
     this.ios,
     this.onDecline,
     this.actionableNotificationData,
+    this.onIgnore,
+    this.onAcceptClockOut
   });
 
   final String? id;
@@ -49,6 +51,12 @@ class CallKitParams {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   final Function(String reason)? onDecline;
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  final Function(String reason)? onIgnore;
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  final Function(String reason)? onAcceptClockOut;
 
   factory CallKitParams.fromJson(Map<String, dynamic> json) =>
       _$CallKitParamsFromJson(json);

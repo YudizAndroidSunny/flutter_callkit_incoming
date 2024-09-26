@@ -22,15 +22,23 @@ Future<void> showCallkitIncoming(String uuid) async {
     actionableNotificationData: ActionableNotificationData(
       visitorId: '1a2b3c4d',
       visitorName: 'Varshil Soni',
+      visitorImage: "https://avatars.githubusercontent.com/u/165645464",
       currentUserId: '2asd25asd1',
       currentUserName:"Sunny Kadivar",
       from: 'Yudiz Soluctions Pvt. Ltd.',
       purpose: 'Discuss regarding develop new mobile application.',
       comments: 'Next time this man will come make sure not will come with cigarette.',
       message: 'Hello, I am Varshil Soni. I am here to discuss regarding develop new mobile application.',
+      logo: "https://yuros.com/wp-content/uploads/listing-uploads/cover/2022/10/Yudiz-Solutions-Limited-Logo.png",
     ),
-    onDecline: (String reason) {
+    onDecline: (reason) {
       print('::: TEST ::: CALL_DECLINED_CUSTOM: $reason');
+    },
+    onAcceptClockOut: (reason) {
+      print('::: TEST ::: CALL_ACCEPT_CLOCK_OUT: $reason');
+    },
+    onIgnore: (reason) {
+      print('::: TEST ::: CALL_IGNORE: $reason');
     },
     id: uuid,
     nameCaller: 'Hien Nguyen',

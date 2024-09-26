@@ -31,6 +31,8 @@ import android.os.PowerManager
 import android.text.TextUtils
 import android.util.Log
 import android.widget.Button
+import com.bumptech.glide.Glide
+import de.hdodenhof.circleimageview.CircleImageView
 
 
 class CallkitIncomingActivity : Activity() {
@@ -71,10 +73,21 @@ class CallkitIncomingActivity : Activity() {
 //    private lateinit var ivBackground: ImageView
 //    private lateinit var llBackgroundAnimation: RippleRelativeLayout
 
-    private lateinit var tvNameCaller: TextView
+//    private lateinit var tvNameCaller: TextView
+
+    private lateinit var tvVisitorName: TextView
+    private lateinit var tvCurrentUserName: TextView
+    private lateinit var tvFrom: TextView
+    private lateinit var tvPurpose: TextView
+    private lateinit var tvComments: TextView
+    private lateinit var tvMessage: TextView
+
+
 //    private lateinit var tvNumber: TextView
 //    private lateinit var ivLogo: ImageView
-//    private lateinit var ivAvatar: CircleImageView
+
+    private lateinit var ivAvatar: CircleImageView
+    private lateinit var ivLogo: ImageView
 
 //    private lateinit var llAction: LinearLayout
 //    private lateinit var ivAcceptCall: ImageView
@@ -83,6 +96,8 @@ class CallkitIncomingActivity : Activity() {
 
 //    private lateinit var ivDeclineCall: ImageView
     private lateinit var ivDeclineCall: Button
+    private lateinit var btnIgnoreButton: Button
+    private lateinit var btnAcceptClockOutButton: Button
 //    private lateinit var tvDecline: TextView
 
     @Suppress("DEPRECATION")
@@ -183,22 +198,45 @@ class CallkitIncomingActivity : Activity() {
 
 		val textColor = data?.getString(CallkitConstants.EXTRA_CALLKIT_TEXT_COLOR, "#ffffff")
         val isShowCallID = data?.getBoolean(CallkitConstants.EXTRA_CALLKIT_IS_SHOW_CALL_ID, false)
-        tvNameCaller.text = data?.getString(CallkitConstants.EXTRA_CALLKIT_NAME_CALLER, "")
+//        tvNameCaller.text = data?.getString(CallkitConstants.EXTRA_CALLKIT_NAME_CALLER, "")
 
         val actionableNotificationData = data?.getSerializable(CallkitConstants.EXTRA_CALLKIT_ACTIONABLE_NOTIFICATION_DATA) as? HashMap<String, Any?>?
         if(actionableNotificationData != null) {
-            tvNameCaller.text = actionableNotificationData.get("visitor_name").toString()
+
+//            tvNameCaller.text = actionableNotificationData["visitor_name"].toString()
+
+            tvVisitorName.text = actionableNotificationData["visitor_name"].toString()
+            tvCurrentUserName.text = "Hello,"+actionableNotificationData["current_user_name"].toString()
+            tvFrom.text = actionableNotificationData["from"].toString()
+            tvPurpose.text = actionableNotificationData["purpose"].toString()
+            tvComments.text = actionableNotificationData["comments"].toString()
+            tvMessage.text = actionableNotificationData["message"].toString()
+            var url = actionableNotificationData["visitor_image"].toString()
+            Glide
+                .with(this)
+                .load(url)
+                .centerCrop()
+                .placeholder(R.drawable.ic_default_avatar)
+                .into(ivAvatar);
+            var logoUrl = actionableNotificationData["logo"].toString()
+            Glide
+                .with(this)
+                .load(logoUrl)
+                .centerCrop()
+                .placeholder(R.drawable.ic_default_avatar)
+                .into(ivLogo);
+
         } else {
             Log.d("IncomingData", "actionableNotificationData  is NULL")
         }
 //        tvNumber.text = data?.getString(CallkitConstants.EXTRA_CALLKIT_HANDLE, "")
 //        tvNumber.visibility = if (isShowCallID == true) View.VISIBLE else View.INVISIBLE
 
-		try {
-			tvNameCaller.setTextColor(Color.parseColor(textColor))
+//		try {
+//			tvNameCaller.setTextColor(Color.parseColor(textColor))
 //			tvNumber.setTextColor(Color.parseColor(textColor))
-		} catch (error: Exception) {
-		}
+//		} catch (error: Exception) {
+//		}
 
 //        val isShowLogo = data?.getBoolean(CallkitConstants.EXTRA_CALLKIT_IS_SHOW_LOGO, false)
 //        ivLogo.visibility = if (isShowLogo == true) View.VISIBLE else View.INVISIBLE
@@ -274,10 +312,19 @@ class CallkitIncomingActivity : Activity() {
 //                Utils.getScreenWidth() + Utils.getStatusBarHeight(this@CallkitIncomingActivity)
 //        llBackgroundAnimation.startRippleAnimation()
 
-        tvNameCaller = findViewById(R.id.tvNameCaller)
+//        tvNameCaller = findViewById(R.id.tvNameCaller)
+
+        tvVisitorName = findViewById(R.id.tvVisitorName)
+        tvCurrentUserName = findViewById(R.id.tvCurrentUserName)
+        tvFrom = findViewById(R.id.tvFrom)
+        tvPurpose = findViewById(R.id.tvPurpose)
+        tvComments = findViewById(R.id.tvComments)
+        tvMessage = findViewById(R.id.tvMessage)
+
 //        tvNumber = findViewById(R.id.tvNumber)
-//        ivLogo = findViewById(R.id.ivLogo)
-//        ivAvatar = findViewById(R.id.ivAvatar)
+
+        ivAvatar = findViewById(R.id.ivAvatar)
+        ivLogo = findViewById(R.id.ivLogo)
 
 //        llAction = findViewById(R.id.llAction)
 
@@ -288,6 +335,8 @@ class CallkitIncomingActivity : Activity() {
         ivAcceptCall = findViewById(R.id.ivAcceptCall)
 //        tvAccept = findViewById(R.id.tvAccept)
         ivDeclineCall = findViewById(R.id.ivDeclineCall)
+        btnIgnoreButton = findViewById(R.id.btnIgnoreButton)
+        btnAcceptClockOutButton = findViewById(R.id.btnAcceptClockOutButton)
 //        tvDecline = findViewById(R.id.tvDecline)
 //        animateAcceptCall()
 
@@ -296,6 +345,12 @@ class CallkitIncomingActivity : Activity() {
         }
         ivDeclineCall.setOnClickListener {
             onDeclineClick()
+        }
+        btnIgnoreButton.setOnClickListener {
+            onIgnoreClick()
+        }
+        btnAcceptClockOutButton.setOnClickListener {
+            onAcceptClockOutClick()
         }
     }
 
@@ -313,6 +368,21 @@ class CallkitIncomingActivity : Activity() {
 
         dismissKeyguard()
         finish()
+    }
+
+    private fun onAcceptClockOutClick() {
+        val data = intent.extras?.getBundle(CallkitConstants.EXTRA_CALLKIT_INCOMING_DATA)
+        val acceptIntent = TransparentActivity.getIntent(this, CallkitConstants.ACTION_CALL_ACCEPT_CLOCK_OUT, data)
+        startActivity(acceptIntent)
+        dismissKeyguard()
+        finish()
+    }
+
+    private fun onIgnoreClick() {
+        val data = intent.extras?.getBundle(CallkitConstants.EXTRA_CALLKIT_INCOMING_DATA)
+        val intent = CallkitIncomingBroadcastReceiver.getIntentIgnore(this@CallkitIncomingActivity, data)
+        sendBroadcast(intent)
+        finishTask()
     }
 
     private fun dismissKeyguard() {
